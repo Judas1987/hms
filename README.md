@@ -1,7 +1,3 @@
-Certainly! Below is a comprehensive exercise for a senior developer that spans approximately one week (40 hours) of work. The exercise is designed to challenge their skills in both backend (C#, MSSQL, EF) and frontend (Angular) development, while also encouraging best practices in architecture, testing, and performance optimization.
-
----
-
 ### **Exercise: Health Management System - Patient Dashboard Module**
 
 #### **Objective**
