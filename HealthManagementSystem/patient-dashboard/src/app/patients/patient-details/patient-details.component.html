@@ -1,0 +1,126 @@
+<h2>Patient details</h2>
+<div *ngIf="patient" class="header-buttons">
+    <button mat-raised-button color="warn" (click)="exportAsPdf()">Export as PDF</button>
+    <button mat-raised-button color="primary" (click)="exportAsExcel()">Export as Excel</button>
+  </div>
+    
+<div class="patient-info" *ngIf="patient; else loadingTpl">
+  <p><strong>Name:</strong> {{ patient.name }}</p>
+  <p><strong>Birth date:</strong> {{ patient.dateOfBirth | date }}</p>
+  <p><strong>Gender:</strong> {{ patient.gender }}</p>
+  <p><strong>Contact:</strong> {{ patient.contactInfo }}</p>
+  <p><strong>Medic Historial:</strong> {{ patient.medicalHistory }}</p>
+
+  <mat-tab-group>
+
+    <!-- TAB: CITAS -->
+    <mat-tab label="Citas">
+      <div *ngIf="patient.appointments?.length > 0; else noAppointments">
+        <ul>
+            <li *ngFor="let appt of patient.appointments">
+                {{ appt.date | date }} - {{ appt.time }} con <strong>{{ appt.doctor }}</strong> ({{ appt.status }})
+                <span class="edit-btn" (click)="editAppointment(appt)">Edit</span>
+              </li>
+        </ul>
+      </div>
+      <ng-template #noAppointments>
+        <p>Este paciente no tiene citas registradas.</p>
+      </ng-template>
+
+      <h4>Agregar nueva cita</h4>
+      <form (ngSubmit)="addAppointment()" class="appointment-form">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Doctor</mat-label>
+          <input matInput name="doctor" [(ngModel)]="newAppointment.doctor" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha</mat-label>
+          <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="newAppointment.date" required />
+          <mat-datepicker-toggle matSuffix [for]="picker" />
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Hora</mat-label>
+          <input matInput name="time" [(ngModel)]="newAppointment.time" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Estado</mat-label>
+          <mat-select name="status" [(ngModel)]="newAppointment.status">
+            <mat-option value="Scheduled">Programada</mat-option>
+            <mat-option value="Completed">Completada</mat-option>
+            <mat-option value="Cancelled">Cancelada</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit">
+            {{ isEditing ? 'Actualizar Cita' : 'Guardar Cita' }}
+          </button>
+          <button *ngIf="isEditing" mat-button type="button" (click)="cancelEdit()">Cancelar</button>
+
+      </form>
+    </mat-tab>
+
+    <!-- TAB: RECETAS -->
+    <mat-tab label="Recetas">
+        <div *ngIf="patient.prescriptions?.length > 0; else noRx">
+            <ul>
+              <li *ngFor="let rx of patient.prescriptions">
+                {{ rx.date | date }} - <strong>{{ rx.medication }}</strong>
+                ({{ rx.dosage }}, {{ rx.frequency }}) recetado por {{ rx.prescribingDoctor }}
+                <span class="edit-btn" (click)="editPrescription(rx)">Editar</span>
+              </li>
+            </ul>
+          </div>
+          
+          <ng-template #noRx>
+            <p>Este paciente no tiene recetas aún.</p>
+          </ng-template>
+          
+          <h4>{{ isEditingPrescription ? 'Editar Receta' : 'Agregar Receta' }}</h4>
+          
+          <form class="prescription-form" (ngSubmit)="addPrescription()" class="appointment-form">
+          
+            <mat-form-field class="full-width">
+              <mat-label>Medicamento</mat-label>
+              <input matInput [(ngModel)]="newPrescription.medication" name="medication" required />
+            </mat-form-field>
+          
+            <mat-form-field class="full-width">
+              <mat-label>Dosificación</mat-label>
+              <input matInput [(ngModel)]="newPrescription.dosage" name="dosage" required />
+            </mat-form-field>
+          
+            <mat-form-field class="full-width">
+              <mat-label>Frecuencia</mat-label>
+              <input matInput [(ngModel)]="newPrescription.frequency" name="frequency" required />
+            </mat-form-field>
+          
+            <mat-form-field class="full-width">
+              <mat-label>Fecha</mat-label>
+              <input matInput [matDatepicker]="rxPicker" [(ngModel)]="newPrescription.date" name="date" required />
+              <mat-datepicker-toggle matSuffix [for]="rxPicker" />
+              <mat-datepicker #rxPicker></mat-datepicker>
+            </mat-form-field>
+          
+            <mat-form-field class="full-width">
+              <mat-label>Doctor</mat-label>
+              <input matInput [(ngModel)]="newPrescription.prescribingDoctor" name="prescribingDoctor" required />
+            </mat-form-field>
+          
+            <button mat-raised-button color="primary" type="submit">
+              {{ isEditingPrescription ? 'Actualizar Receta' : 'Guardar Receta' }}
+            </button>
+            <button *ngIf="isEditingPrescription" mat-button type="button" (click)="cancelPrescriptionEdit()">Cancelar</button>
+          </form>          
+    </mat-tab>
+
+  </mat-tab-group>
+</div>
+
+<ng-template #loadingTpl>
+  <p>Cargando datos del paciente...</p>
+</ng-template>
