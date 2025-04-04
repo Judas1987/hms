@@ -2,6 +2,9 @@
 using HealthManagementSystem.Data;
 using HealthManagementSystem.Dtos;
 using HealthManagementSystem.Models;
+using HealthManagementSystem.Repositories.Implementations;
+using HealthManagementSystem.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,13 +14,13 @@ namespace HealthManagementSystem.Controllers
     [Route("api/[controller]")]
     public class PatientsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IPatientRepository _patientRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<PatientsController> _logger;
 
-        public PatientsController(ApplicationDbContext context, IMapper mapper, ILogger<PatientsController> logger)
+        public PatientsController(IPatientRepository patientRepo, IMapper mapper, ILogger<PatientsController> logger)
         {
-            _context = context;
+            _patientRepository = patientRepo;
             _mapper = mapper;
             _logger = logger;
         }
@@ -28,24 +31,11 @@ namespace HealthManagementSystem.Controllers
     [FromQuery] int page = 1,
     [FromQuery] int pageSize = 10)
         {
-            var query = _context.Patients
-                .AsNoTracking()
-                .OrderBy(p => p.Name)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(name))
-                query = query.Where(p => p.Name.Contains(name));
-
-            var totalCount = await query.CountAsync();
-
-            var items = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var (patients, totalCount) = await _patientRepository.SearchAsync(name, page, pageSize);
 
             return Ok(new
             {
-                items = _mapper.Map<List<PatientDto>>(items),
+                items = _mapper.Map<List<PatientDto>>(patients),
                 totalCount
             });
         }
@@ -56,23 +46,21 @@ namespace HealthManagementSystem.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var patient = await _context.Patients
-                .Include(p => p.Appointments)
-                .Include(p => p.Prescriptions)
-                .FirstOrDefaultAsync(p => p.Id == id);
-
+            var patient = await _patientRepository.GetByIdWithDetailsAsync(id);
             if (patient == null) return NotFound();
+
             var dto = _mapper.Map<PatientDto>(patient);
             return Ok(dto);
         }
 
         // POST /api/patients
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePatientDto patientDto)
         {
             var patient = _mapper.Map<Patient>(patientDto);
-            _context.Patients.Add(patient);
-            await _context.SaveChangesAsync();
+            await _patientRepository.AddAsync(patient);
+            await _patientRepository.SaveChangesAsync();
             return CreatedAtAction(nameof(Get), new { id = patient.Id }, _mapper.Map<PatientDto>(patient));
         }
 
@@ -80,12 +68,22 @@ namespace HealthManagementSystem.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdatePatientDto dto)
         {
-            var patient = await _context.Patients.FindAsync(id);
+            var patient = await _patientRepository.GetByIdAsync(id);
             if (patient == null) return NotFound();
 
             _mapper.Map(dto, patient);
 
-            await _context.SaveChangesAsync();
+            await _patientRepository.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var patient = await _patientRepository.GetByIdAsync(id);
+            if (patient == null) return NotFound();
+            _patientRepository.Delete(patient);
+            await _patientRepository.SaveChangesAsync();
             return NoContent();
         }
     }

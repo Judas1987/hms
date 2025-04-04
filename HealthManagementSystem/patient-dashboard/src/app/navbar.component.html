@@ -1,9 +1,17 @@
-<nav>
-    <div><strong>Health Dashboard</strong></div>
+<nav class="navbar" role="navigation" aria-label="Main Navigation">
+  <mat-toolbar color="primary">
+    <button mat-icon-button (click)="toggleMenu()" class="menu-button">
+      <mat-icon>menu</mat-icon>
+    </button>
   
-    <div *ngIf="auth.isLoggedIn()">
-      Role: <strong>{{ getRole() }}</strong>
-      <button style="margin-left: 1rem;" (click)="logout()">Logout</button>
-    </div>
-  </nav>
+    <span class="title">Patient Dashboard</span>
   
+    <span class="spacer"></span>
+  
+    <nav [ngClass]="{ 'open': isMenuOpen }" class="menu-items">
+      <a mat-button routerLink="/patients">Patients</a>
+      <button mat-button (click)="logout()">Logout</button>
+    </nav>
+  </mat-toolbar>
+  
+</nav>

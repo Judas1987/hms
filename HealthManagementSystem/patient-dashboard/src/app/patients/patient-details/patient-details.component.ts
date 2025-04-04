@@ -169,23 +169,23 @@ export class PatientDetailsComponent implements OnInit {
     doc.setFontSize(16);
     doc.text(title, 14, 15);
   
-    // Detalles del paciente
+    // Patient details
     doc.setFontSize(12);
-    doc.text(`Fecha de nacimiento: ${new Date(this.patient.dateOfBirth).toLocaleDateString()}`, 14, 25);
-    doc.text(`Género: ${this.patient.gender}`, 14, 32);
-    doc.text(`Contacto: ${this.patient.contactInfo}`, 14, 39);
-    doc.text(`Historial médico: ${this.patient.medicalHistory}`, 14, 46);
+    doc.text(`Birth date: ${new Date(this.patient.dateOfBirth).toLocaleDateString()}`, 14, 25);
+    doc.text(`Gender: ${this.patient.gender}`, 14, 32);
+    doc.text(`Contact: ${this.patient.contactInfo}`, 14, 39);
+    doc.text(`Medical history: ${this.patient.medicalHistory}`, 14, 46);
   
     let currentY = 55;
   
-    // Citas
+    // Appointments
     doc.setFontSize(14);
-    doc.text('Citas', 14, currentY);
+    doc.text('Appointments', 14, currentY);
     currentY += 6;
   
     autoTable(doc, {
       startY: currentY,
-      head: [['Fecha', 'Hora', 'Doctor', 'Estado']],
+      head: [['Date', 'Time', 'Doctor', 'Status']],
       body: this.patient.appointments.map((a: any) => [
         new Date(a.date).toLocaleDateString(), a.time, a.doctor, a.status
       ]),
@@ -194,35 +194,35 @@ export class PatientDetailsComponent implements OnInit {
   
     currentY = (doc as any).lastAutoTable.finalY + 10;
   
-    // Recetas
+    // Receips
     doc.setFontSize(14);
-    doc.text('Recetas', 14, currentY);
+    doc.text('Receips', 14, currentY);
     currentY += 6;
   
     autoTable(doc, {
       startY: currentY,
-      head: [['Fecha', 'Medicamento', 'Dosis', 'Frecuencia', 'Doctor']],
+      head: [['Date', 'Medicine', 'Dose', 'Frequency', 'Doctor']],
       body: this.patient.prescriptions.map((r: any) => [
         new Date(r.date).toLocaleDateString(), r.medication, r.dosage, r.frequency, r.prescribingDoctor
       ]),
       theme: 'striped'
     });
   
-    doc.save(`Paciente-${this.patient.name}.pdf`);
+    doc.save(`Patient-${this.patient.name}.pdf`);
   }  
   
   exportAsExcel(): void {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
   
-    // Detalles del paciente como fila única
+    // Patient details as unic row
     const patientSheetData = [
-      ['Nombre', 'Fecha de Nacimiento', 'Género', 'Contacto', 'Historial Médico'],
+      ['Name', 'Birth Date', 'Gender', 'Contact', 'Medical history'],
       [this.patient.name, this.patient.dateOfBirth, this.patient.gender, this.patient.contactInfo, this.patient.medicalHistory]
     ];
     const patientSheet = XLSX.utils.aoa_to_sheet(patientSheetData);
-    XLSX.utils.book_append_sheet(wb, patientSheet, 'Datos Paciente');
+    XLSX.utils.book_append_sheet(wb, patientSheet, 'Pacient Data');
   
-    // Citas
+    // Appointments
     const appointments = this.patient.appointments.map((a: any) => ({
       Fecha: new Date(a.date).toLocaleDateString(),
       Hora: a.time,
@@ -230,9 +230,9 @@ export class PatientDetailsComponent implements OnInit {
       Estado: a.status
     }));
     const appointmentSheet = XLSX.utils.json_to_sheet(appointments);
-    XLSX.utils.book_append_sheet(wb, appointmentSheet, 'Citas');
+    XLSX.utils.book_append_sheet(wb, appointmentSheet, 'Appointments');
   
-    // Recetas
+    // Receips
     const prescriptions = this.patient.prescriptions.map((r: any) => ({
       Fecha: new Date(r.date).toLocaleDateString(),
       Medicamento: r.medication,
@@ -241,10 +241,10 @@ export class PatientDetailsComponent implements OnInit {
       Doctor: r.prescribingDoctor
     }));
     const prescriptionSheet = XLSX.utils.json_to_sheet(prescriptions);
-    XLSX.utils.book_append_sheet(wb, prescriptionSheet, 'Recetas');
+    XLSX.utils.book_append_sheet(wb, prescriptionSheet, 'Receips');
   
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blobData = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    FileSaver.saveAs(blobData, `Paciente-${this.patient.name}.xlsx`);
+    FileSaver.saveAs(blobData, `Pacient-${this.patient.name}.xlsx`);
   }  
 }
