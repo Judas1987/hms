@@ -14,12 +14,11 @@ describe('DoctorHomeComponent', () => {
         {
           provide: AppointmentService,
           useValue: {
-            getByCurrentDoctor: () => of([
-              { date: '2025-04-04T10:00:00', patientId: 1 }
-            ])
-          }
-        }
-      ]
+            getByCurrentDoctor: () =>
+              of([{ date: '2025-04-04T10:00:00', patientId: 1 }]),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DoctorHomeComponent);

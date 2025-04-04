@@ -10,14 +10,14 @@ import { AppointmentService } from '../../appointments/service/appointment.servi
   standalone: true,
   imports: [CommonModule, MatCardModule, MatListModule, MatIconModule],
   templateUrl: './doctor-home.component.html',
-  styleUrls: ['./doctor-home.component.scss']
+  styleUrls: ['./doctor-home.component.scss'],
 })
 export class DoctorHomeComponent implements OnInit {
   private appointmentService = inject(AppointmentService);
   appointments: any[] = [];
 
   ngOnInit(): void {
-    this.appointmentService.getByCurrentDoctor().subscribe(res => {
+    this.appointmentService.getByCurrentDoctor().subscribe((res) => {
       this.appointments = res;
     });
   }

@@ -10,11 +10,14 @@ export class PatientService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(name: string = '', page = 1, pageSize = 10, forceRefresh = false): Observable<{ items: any[]; totalCount: number }> {
-    let params = new HttpParams()
-      .set('page', page)
-      .set('pageSize', pageSize);
-    
+  getAll(
+    name: string = '',
+    page = 1,
+    pageSize = 10,
+    forceRefresh = false,
+  ): Observable<{ items: any[]; totalCount: number }> {
+    let params = new HttpParams().set('page', page).set('pageSize', pageSize);
+
     if (name) {
       params = params.set('name', name);
     }
@@ -25,10 +28,12 @@ export class PatientService {
       return of(this.cache[cacheKey]); // retornar del caché
     }
 
-    return this.http.get<{ items: any[]; totalCount: number }>(this.baseUrl, { params }).pipe(
-      delay(3000),
-      tap(data => this.cache[cacheKey] = data) // guardar en caché
-    );
+    return this.http
+      .get<{ items: any[]; totalCount: number }>(this.baseUrl, { params })
+      .pipe(
+        delay(3000),
+        tap((data) => (this.cache[cacheKey] = data)), // guardar en caché
+      );
   }
 
   clearCache() {

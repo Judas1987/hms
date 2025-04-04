@@ -14,7 +14,7 @@ export class PrescriptionService {
   getByPatientEmail(patientMail: string) {
     return this.http.get<any[]>(`${this.baseUrl}/by-email/${patientMail}`);
   }
-  
+
   create(prescription: any) {
     return this.http.post(this.baseUrl, prescription);
   }

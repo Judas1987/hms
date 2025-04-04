@@ -10,11 +10,11 @@ export class AppointmentService {
   getByPatient(patientId: number) {
     return this.http.get<any[]>(`${this.baseUrl}/by-patient/${patientId}`);
   }
-  
+
   getByCurrentDoctor() {
     return this.http.get<any[]>(`${this.baseUrl}/by-doctor`);
   }
-  
+
   create(appointment: any) {
     return this.http.post(this.baseUrl, appointment);
   }

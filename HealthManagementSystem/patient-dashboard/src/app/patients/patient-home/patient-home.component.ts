@@ -9,14 +9,9 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-patient-home',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatListModule,
-    MatIconModule
-  ],
+  imports: [CommonModule, MatCardModule, MatListModule, MatIconModule],
   templateUrl: './patient-home.component.html',
-  styleUrls: ['./patient-home.component.scss']
+  styleUrls: ['./patient-home.component.scss'],
 })
 export class PatientHomeComponent implements OnInit {
   private prescriptionService = inject(PrescriptionService);
@@ -26,7 +21,7 @@ export class PatientHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const patientMail = this.authService.getUser();
-    this.prescriptionService.getByPatientEmail(patientMail).subscribe(res => {
+    this.prescriptionService.getByPatientEmail(patientMail).subscribe((res) => {
       this.prescriptions = res;
     });
   }

@@ -10,7 +10,7 @@ describe('NavbarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, NavbarComponent], // ✅
-      providers: [AuthService] // opcional si no se usa directamente inject()
+      providers: [AuthService], // opcional si no se usa directamente inject()
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);

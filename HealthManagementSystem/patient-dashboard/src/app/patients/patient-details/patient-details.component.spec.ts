@@ -13,10 +13,7 @@ describe('PatientDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        PatientDetailsComponent,
-      ],
+      imports: [HttpClientTestingModule, PatientDetailsComponent],
       providers: [
         provideHttpClient(),
         PatientService,
@@ -26,11 +23,11 @@ describe('PatientDetailsComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
-              paramMap: convertToParamMap({ id: '1' })
-            }
-          }
-        }
-      ]
+              paramMap: convertToParamMap({ id: '1' }),
+            },
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PatientDetailsComponent);

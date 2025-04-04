@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,27 +26,30 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
   ],
 })
 export class LoginComponent {
   hide = true;
   form!: FormGroup;
-  
+
   error = '';
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router,
+  ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   }
-  
+
   login() {
     if (this.form.invalid) return;
     this.auth.login(this.form.value.email, this.form.value.password).subscribe({
-      next: res => {
-        
+      next: (res) => {
         this.auth.storeToken(res.token);
         this.auth.notifyLoginChange();
         const roles = this.auth.getUserRoles();
@@ -52,7 +60,7 @@ export class LoginComponent {
       },
       error: () => {
         this.error = 'Invalid credentials';
-      }
+      },
     });
   }
 }

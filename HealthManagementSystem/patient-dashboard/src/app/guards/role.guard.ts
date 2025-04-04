@@ -14,7 +14,7 @@ export const roleGuard: CanActivateFn = (route) => {
   const userRoles = auth.getUserRoles();
   const allowedRoles = route.data['roles'] as string[];
 
-  const hasAccess = userRoles.some(role => allowedRoles.includes(role));
+  const hasAccess = userRoles.some((role) => allowedRoles.includes(role));
 
   // Si el rol no coincide, redirige al login o a página de acceso denegado
   return hasAccess ? true : router.createUrlTree(['/access-denied']);

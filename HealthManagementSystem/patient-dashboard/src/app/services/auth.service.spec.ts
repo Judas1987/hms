@@ -16,10 +16,10 @@ describe('PatientDetailsComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
-              paramMap: convertToParamMap({ id: '1' })
-            }
-          }
-        }
+              paramMap: convertToParamMap({ id: '1' }),
+            },
+          },
+        },
       ],
     });
   });

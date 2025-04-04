@@ -6,10 +6,7 @@ import { PatientService } from '../service/patient.service';
 describe('PatientListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        PatientListComponent
-      ],
+      imports: [HttpClientTestingModule, PatientListComponent],
       providers: [PatientService],
     }).compileComponents();
   });

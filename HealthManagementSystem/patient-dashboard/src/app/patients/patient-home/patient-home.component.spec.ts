@@ -15,16 +15,23 @@ describe('PatientHomeComponent', () => {
         {
           provide: PrescriptionService,
           useValue: {
-            getAll: () => of([{ medication: 'Ibuprofen', dosage: '200mg', frequency: '3x/day' }])
-          }
+            getAll: () =>
+              of([
+                {
+                  medication: 'Ibuprofen',
+                  dosage: '200mg',
+                  frequency: '3x/day',
+                },
+              ]),
+          },
         },
         {
           provide: AuthService,
           useValue: {
-            getUserId: () => '4'
-          }
-        }
-      ]
+            getUserId: () => '4',
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PatientHomeComponent);

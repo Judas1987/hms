@@ -5,23 +5,45 @@
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Email</mat-label>
       <input matInput formControlName="email" type="email" required />
-      <mat-error *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+      <mat-error
+        *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+      >
         Please enter a valid email.
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Password</mat-label>
-      <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required />
-      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="!hide">
-        <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+      <input
+        matInput
+        [type]="hide ? 'password' : 'text'"
+        formControlName="password"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Toggle password visibility'"
+        [attr.aria-pressed]="!hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
-      <mat-error *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+      <mat-error
+        *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+      >
         Password is required.
       </mat-error>
     </mat-form-field>
 
-    <button data-cy="login-button" mat-raised-button color="primary" class="full-width" type="submit" [disabled]="form.invalid">
+    <button
+      data-cy="login-button"
+      mat-raised-button
+      color="primary"
+      class="full-width"
+      type="submit"
+      [disabled]="form.invalid"
+    >
       Sign In
     </button>
   </form>

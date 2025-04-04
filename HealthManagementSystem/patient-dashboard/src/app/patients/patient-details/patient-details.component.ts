@@ -20,7 +20,8 @@ import * as FileSaver from 'file-saver';
 @Component({
   selector: 'app-patient-details',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     FormsModule,
     MatTabsModule,
     MatFormFieldModule,
@@ -28,9 +29,10 @@ import * as FileSaver from 'file-saver';
     MatSelectModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatNativeDateModule],
+    MatNativeDateModule,
+  ],
   templateUrl: './patient-details.component.html',
-  styleUrls: ['./patient-details.component.scss']
+  styleUrls: ['./patient-details.component.scss'],
 })
 export class PatientDetailsComponent implements OnInit {
   patientId: string = '';
@@ -42,7 +44,6 @@ export class PatientDetailsComponent implements OnInit {
     date: '',
     time: '',
     status: 'Scheduled',
-    
   };
   get isEditing(): boolean {
     return this.editingAppointment !== null;
@@ -55,23 +56,26 @@ export class PatientDetailsComponent implements OnInit {
     date: '',
     prescribingDoctor: '',
   };
-  
+
   editingPrescription: any = null;
-  
+
   get isEditingPrescription(): boolean {
     return this.editingPrescription !== null;
   }
-  
-  constructor(private route: ActivatedRoute, private patientService: PatientService, 
+
+  constructor(
+    private route: ActivatedRoute,
+    private patientService: PatientService,
     private appointmentService: AppointmentService,
-  private prescriptionService: PrescriptionService) {}
+    private prescriptionService: PrescriptionService,
+  ) {}
 
   ngOnInit(): void {
     this.patientId = this.route.snapshot.paramMap.get('id') ?? '';
     if (this.patientId) {
       this.patientService.getById(this.patientId).subscribe({
         next: (res) => (this.patient = res),
-        error: (err) => console.error(err)
+        error: (err) => console.error(err),
       });
     }
   }
@@ -93,7 +97,7 @@ export class PatientDetailsComponent implements OnInit {
     this.editingAppointment = { ...appt }; // copia para evitar mutación directa
     this.newAppointment = { ...this.editingAppointment }; // usa el mismo form
   }
-  
+
   cancelEdit(): void {
     this.editingAppointment = null;
     this.newAppointment = {
@@ -103,36 +107,43 @@ export class PatientDetailsComponent implements OnInit {
       status: 'Scheduled',
     };
   }
-  
+
   addAppointment(): void {
     const data = {
       ...this.newAppointment,
       patientId: this.patient.id,
     };
-  
+
     if (this.isEditing) {
-      this.appointmentService.update(this.editingAppointment.id, data).subscribe({
-        next: () => {
-          this.cancelEdit();
-          this.loadPatient();
-        },
-        error: (err) => console.error(err),
-      });
+      this.appointmentService
+        .update(this.editingAppointment.id, data)
+        .subscribe({
+          next: () => {
+            this.cancelEdit();
+            this.loadPatient();
+          },
+          error: (err) => console.error(err),
+        });
     } else {
       this.appointmentService.create(data).subscribe({
         next: () => {
           this.loadPatient();
-          this.newAppointment = { doctor: '', date: '', time: '', status: 'Scheduled' };
+          this.newAppointment = {
+            doctor: '',
+            date: '',
+            time: '',
+            status: 'Scheduled',
+          };
         },
         error: (err) => console.error(err),
       });
     }
-  }  
+  }
   editPrescription(p: any): void {
     this.editingPrescription = { ...p };
     this.newPrescription = { ...this.editingPrescription };
   }
-  
+
   cancelPrescriptionEdit(): void {
     this.editingPrescription = null;
     this.newPrescription = {
@@ -143,17 +154,17 @@ export class PatientDetailsComponent implements OnInit {
       prescribingDoctor: '',
     };
   }
-  
+
   addPrescription(): void {
     const data = {
       ...this.newPrescription,
       patientId: this.patient.id,
     };
-  
+
     const req = this.isEditingPrescription
       ? this.prescriptionService.update(this.editingPrescription.id, data)
       : this.prescriptionService.create(data);
-  
+
     req.subscribe({
       next: () => {
         this.cancelPrescriptionEdit();
@@ -168,83 +179,105 @@ export class PatientDetailsComponent implements OnInit {
     const title = `Historial del Paciente: ${this.patient.name}`;
     doc.setFontSize(16);
     doc.text(title, 14, 15);
-  
+
     // Patient details
     doc.setFontSize(12);
-    doc.text(`Birth date: ${new Date(this.patient.dateOfBirth).toLocaleDateString()}`, 14, 25);
+    doc.text(
+      `Birth date: ${new Date(this.patient.dateOfBirth).toLocaleDateString()}`,
+      14,
+      25,
+    );
     doc.text(`Gender: ${this.patient.gender}`, 14, 32);
     doc.text(`Contact: ${this.patient.contactInfo}`, 14, 39);
     doc.text(`Medical history: ${this.patient.medicalHistory}`, 14, 46);
-  
+
     let currentY = 55;
-  
+
     // Appointments
     doc.setFontSize(14);
     doc.text('Appointments', 14, currentY);
     currentY += 6;
-  
+
     autoTable(doc, {
       startY: currentY,
       head: [['Date', 'Time', 'Doctor', 'Status']],
       body: this.patient.appointments.map((a: any) => [
-        new Date(a.date).toLocaleDateString(), a.time, a.doctor, a.status
+        new Date(a.date).toLocaleDateString(),
+        a.time,
+        a.doctor,
+        a.status,
       ]),
-      theme: 'striped'
+      theme: 'striped',
     });
-  
+
     currentY = (doc as any).lastAutoTable.finalY + 10;
-  
+
     // Receips
     doc.setFontSize(14);
     doc.text('Receips', 14, currentY);
     currentY += 6;
-  
+
     autoTable(doc, {
       startY: currentY,
       head: [['Date', 'Medicine', 'Dose', 'Frequency', 'Doctor']],
       body: this.patient.prescriptions.map((r: any) => [
-        new Date(r.date).toLocaleDateString(), r.medication, r.dosage, r.frequency, r.prescribingDoctor
+        new Date(r.date).toLocaleDateString(),
+        r.medication,
+        r.dosage,
+        r.frequency,
+        r.prescribingDoctor,
       ]),
-      theme: 'striped'
+      theme: 'striped',
     });
-  
+
     doc.save(`Patient-${this.patient.name}.pdf`);
-  }  
-  
+  }
+
   exportAsExcel(): void {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-  
+
     // Patient details as unic row
     const patientSheetData = [
       ['Name', 'Birth Date', 'Gender', 'Contact', 'Medical history'],
-      [this.patient.name, this.patient.dateOfBirth, this.patient.gender, this.patient.contactInfo, this.patient.medicalHistory]
+      [
+        this.patient.name,
+        this.patient.dateOfBirth,
+        this.patient.gender,
+        this.patient.contactInfo,
+        this.patient.medicalHistory,
+      ],
     ];
     const patientSheet = XLSX.utils.aoa_to_sheet(patientSheetData);
     XLSX.utils.book_append_sheet(wb, patientSheet, 'Pacient Data');
-  
+
     // Appointments
     const appointments = this.patient.appointments.map((a: any) => ({
       Fecha: new Date(a.date).toLocaleDateString(),
       Hora: a.time,
       Doctor: a.doctor,
-      Estado: a.status
+      Estado: a.status,
     }));
     const appointmentSheet = XLSX.utils.json_to_sheet(appointments);
     XLSX.utils.book_append_sheet(wb, appointmentSheet, 'Appointments');
-  
+
     // Receips
     const prescriptions = this.patient.prescriptions.map((r: any) => ({
       Fecha: new Date(r.date).toLocaleDateString(),
       Medicamento: r.medication,
       Dosis: r.dosage,
       Frecuencia: r.frequency,
-      Doctor: r.prescribingDoctor
+      Doctor: r.prescribingDoctor,
     }));
     const prescriptionSheet = XLSX.utils.json_to_sheet(prescriptions);
     XLSX.utils.book_append_sheet(wb, prescriptionSheet, 'Receips');
-  
-    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const blobData = new Blob([excelBuffer], { type: 'application/octet-stream' });
+
+    const excelBuffer: any = XLSX.write(wb, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const blobData = new Blob([excelBuffer], {
+      type: 'application/octet-stream',
+    });
     FileSaver.saveAs(blobData, `Pacient-${this.patient.name}.xlsx`);
-  }  
+  }
 }

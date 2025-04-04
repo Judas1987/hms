@@ -9,9 +9,15 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, MatToolbarModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatButtonModule,
+  ],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent {
   isMenuOpen = false;
@@ -21,7 +27,10 @@ export class NavbarComponent {
   isDoctor = false;
   isPatient = false;
 
-  constructor(public auth: AuthService, private router: Router) {}
+  constructor(
+    public auth: AuthService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.setRoles(); // inicial al cargar
@@ -36,7 +45,7 @@ export class NavbarComponent {
     this.isDoctor = roles.includes('Doctor');
     this.isPatient = roles.includes('Patient');
   }
-  
+
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
@@ -44,14 +53,13 @@ export class NavbarComponent {
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
     const body = document.body;
-  
+
     if (this.isDarkMode) {
       body.classList.add('dark-theme');
     } else {
       body.classList.remove('dark-theme');
     }
   }
-  
 
   logout() {
     this.auth.logout();

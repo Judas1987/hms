@@ -11,5 +11,4 @@ import { NavbarComponent } from './navbar.component';
 })
 export class AppComponent {
   title = 'patient-dashboard';
-
 }
