@@ -4,6 +4,8 @@ using HealthManagementSystem.Data;
 using HealthManagementSystem.Dtos;
 using HealthManagementSystem.Mappings;
 using HealthManagementSystem.Models;
+using HealthManagementSystem.Repositories.Implementations;
+using HealthManagementSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,6 +20,7 @@ public class PatientsControllerTests
     private readonly PatientsController _controller;
     private readonly Mock<ILogger<PatientsController>> _loggerMock = new();
     private readonly IMapper _mapper;
+    private readonly IPatientRepository _patientRepository;
     private readonly ApplicationDbContext _context;
 
     public PatientsControllerTests()
@@ -32,16 +35,15 @@ public class PatientsControllerTests
             .Options;
 
         _context = new ApplicationDbContext(options);
-
+        _patientRepository = new PatientRepository(_context);
+       
         // Seed test data
-        _context.Patients.AddRange(new[]
-{
-    new Patient { Name = "Juan Pérez", Gender = "Male" },
-    new Patient { Name = "Maria Lopez", Gender = "Female" }
-});
-        _context.SaveChanges();
+        _patientRepository.AddAsync(new Patient { Name = "Juan Pérez", Gender = "Male" });
+        _patientRepository.AddAsync(new Patient { Name = "Maria Lopez", Gender = "Female" });
+        _patientRepository.SaveChangesAsync();
+      
 
-        _controller = new PatientsController(_context, _mapper, _loggerMock.Object);
+        _controller = new PatientsController(_patientRepository, _mapper, _loggerMock.Object);
     }
 
     [Theory]
