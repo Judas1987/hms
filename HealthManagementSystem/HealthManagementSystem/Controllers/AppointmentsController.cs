@@ -31,6 +31,19 @@ namespace HealthManagementSystem.Controllers
             return Ok(_mapper.Map<IEnumerable<AppointmentDto>>(appointments));
         }
 
+        [HttpGet("by-doctor")]
+        [Authorize(Roles = "Doctor")]
+        public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetByCurrentDoctor()
+        {
+            var doctorUserName = User.Identity!.Name;
+
+            var appointments = await _context.Appointments
+                .Where(a => a.Doctor == doctorUserName)
+                .ToListAsync();
+
+            return Ok(_mapper.Map<IEnumerable<AppointmentDto>>(appointments));
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin,Doctor")]
         public async Task<ActionResult<AppointmentDto>> Create(CreateAppointmentDto dto)

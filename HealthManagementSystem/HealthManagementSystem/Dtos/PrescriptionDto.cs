@@ -2,6 +2,7 @@
 {
     public class PrescriptionDto
     {
+        public int PatientId { get; set; }
         public string Medication { get; set; } = "";
         public string Dosage { get; set; } = "";
         public string Frequency { get; set; } = "";

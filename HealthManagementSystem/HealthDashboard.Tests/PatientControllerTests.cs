@@ -8,6 +8,7 @@ using HealthManagementSystem.Repositories.Implementations;
 using HealthManagementSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Dynamic;
@@ -20,6 +21,7 @@ public class PatientsControllerTests
     private readonly PatientsController _controller;
     private readonly Mock<ILogger<PatientsController>> _loggerMock = new();
     private readonly IMapper _mapper;
+    private readonly IMemoryCache _memory;
     private readonly IPatientRepository _patientRepository;
     private readonly ApplicationDbContext _context;
 
@@ -28,6 +30,7 @@ public class PatientsControllerTests
         // Mapper config
         var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
         _mapper = config.CreateMapper();
+        _memory = new MemoryCache(new MemoryCacheOptions());
 
         // In-memory DB
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -35,7 +38,7 @@ public class PatientsControllerTests
             .Options;
 
         _context = new ApplicationDbContext(options);
-        _patientRepository = new PatientRepository(_context);
+        _patientRepository = new PatientRepository(_context, _memory);
        
         // Seed test data
         _patientRepository.AddAsync(new Patient { Name = "Juan Pérez", Gender = "Male" });

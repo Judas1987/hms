@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class PrescriptionService {
-  private baseUrl = 'http://localhost:5000/api/prescriptions';
+  private baseUrl = 'http://localhost:5001/api/prescriptions';
 
   constructor(private http: HttpClient) {}
 
@@ -11,6 +11,10 @@ export class PrescriptionService {
     return this.http.get<any[]>(`${this.baseUrl}/by-patient/${patientId}`);
   }
 
+  getByPatientEmail(patientMail: string) {
+    return this.http.get<any[]>(`${this.baseUrl}/by-email/${patientMail}`);
+  }
+  
   create(prescription: any) {
     return this.http.post(this.baseUrl, prescription);
   }

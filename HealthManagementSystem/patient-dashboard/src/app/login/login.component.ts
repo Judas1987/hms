@@ -26,7 +26,6 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   hide = true;
-  loginError = '';
   form!: FormGroup;
   
   error = '';
@@ -42,8 +41,14 @@ export class LoginComponent {
     if (this.form.invalid) return;
     this.auth.login(this.form.value.email, this.form.value.password).subscribe({
       next: res => {
+        
         this.auth.storeToken(res.token);
-        this.router.navigate(['/patients']);
+        this.auth.notifyLoginChange();
+        const roles = this.auth.getUserRoles();
+        if (roles.includes('Admin')) this.router.navigate(['/patients']);
+        else if (roles.includes('Doctor')) this.router.navigate(['/doctor']);
+        else if (roles.includes('Patient')) this.router.navigate(['/patient']);
+        else this.router.navigate(['/access-denied']);
       },
       error: () => {
         this.error = 'Invalid credentials';

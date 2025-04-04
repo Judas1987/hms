@@ -1,4 +1,21 @@
-<h2>Patient List</h2>
+<div class="toolbar">
+  <h2>Patient List</h2>
+  <button mat-raised-button color="primary" (click)="refresh()">Refresh</button>
+</div>
+<!-- Spinner de carga -->
+<mat-progress-spinner
+  *ngIf="loading"
+  mode="indeterminate"
+  diameter="40"
+  color="primary"
+  class="spinner-center">
+</mat-progress-spinner>
+
+<!-- Mensaje de error -->
+<mat-card *ngIf="error" class="error-message">
+  <mat-icon>error</mat-icon>
+  {{ error }}
+</mat-card>
 
 <mat-form-field appearance="outline" class="full-width">
   <mat-label>Search by Name</mat-label>
@@ -6,6 +23,8 @@
 </mat-form-field>
 
 <button mat-raised-button color="primary" (click)="onSearch()">Search</button>
+<div *ngIf="!loading && !error">
+
 
 <table mat-table [dataSource]="patients" class="mat-elevation-z8" style="margin-top: 1rem;">
 
@@ -40,3 +59,4 @@
   [pageSizeOptions]="[5, 10, 25]"
   (page)="onPageChange($event)">
 </mat-paginator>
+</div>

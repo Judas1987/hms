@@ -21,12 +21,13 @@
       </mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="form.invalid">
+    <button data-cy="login-button" mat-raised-button color="primary" class="full-width" type="submit" [disabled]="form.invalid">
       Sign In
     </button>
   </form>
 
-  <div class="error-message" *ngIf="loginError">
-    {{ loginError }}
-  </div>
+  <mat-card *ngIf="error" class="error-message">
+    <mat-icon>error</mat-icon>
+    {{ error }}
+  </mat-card>
 </mat-card>

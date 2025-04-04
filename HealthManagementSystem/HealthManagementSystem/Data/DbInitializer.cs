@@ -63,7 +63,7 @@ namespace HealthManagementSystem.Data
             var patients = new List<Patient>
         {
             new() { Name = "Juan Pérez", DateOfBirth = new(1990, 5, 12), Gender = "Male", ContactInfo = "juan@example.com", MedicalHistory = "Diabetes tipo 2" },
-            new() { Name = "María Gómez", DateOfBirth = new(1985, 3, 22), Gender = "Female", ContactInfo = "maria@example.com", MedicalHistory = "Asma crónica" }
+            new() { Name = "María Gómez", DateOfBirth = new(1985, 3, 22), Gender = "Female", ContactInfo = "patient@hms.com", MedicalHistory = "Asma crónica" }
         };
 
             db.Patients.AddRange(patients);
