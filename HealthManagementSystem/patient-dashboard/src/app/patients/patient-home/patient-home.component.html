@@ -1,0 +1,18 @@
+<mat-card class="patient-home-card">
+  <h2>Patient Dashboard</h2>
+  <p>Your prescriptions:</p>
+
+  <mat-list *ngIf="prescriptions.length > 0; else empty">
+    <mat-list-item *ngFor="let presc of prescriptions">
+      <mat-icon matListIcon>medication</mat-icon>
+      <div matLine>{{ presc.medication }}</div>
+      <div matLine class="secondary">
+        {{ presc.dosage }} — {{ presc.frequency }}
+      </div>
+    </mat-list-item>
+  </mat-list>
+
+  <ng-template #empty>
+    <p>No prescriptions found.</p>
+  </ng-template>
+</mat-card>

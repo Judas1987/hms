@@ -1,0 +1,16 @@
+<mat-card class="doctor-home-card">
+  <h2>Doctor Dashboard</h2>
+  <p>Your upcoming appointments:</p>
+
+  <mat-list *ngIf="appointments.length > 0; else noData">
+    <mat-list-item *ngFor="let appt of appointments">
+      <mat-icon matListIcon>event</mat-icon>
+      <div matLine>{{ appt.date | date: "short" }}</div>
+      <div matLine class="secondary">Patient ID: {{ appt.patientId }}</div>
+    </mat-list-item>
+  </mat-list>
+
+  <ng-template #noData>
+    <p>No appointments found.</p>
+  </ng-template>
+</mat-card>

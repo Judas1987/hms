@@ -1,0 +1,36 @@
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+.dark-theme {
+  @import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+}
+/* Estilos personalizados en modo claro (por defecto) */
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --card-bg: #f5f5f5;
+}
+
+/* Estilos personalizados para modo oscuro */
+.dark-theme {
+  --bg: #121212;
+  --text: #f1f1f1;
+  --card-bg: #1e1e1e;
+}
+
+/* Aplica las variables */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Personaliza contenedores comunes */
+.patient-info,
+.card,
+.dashboard-section {
+  background-color: var(--card-bg);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}

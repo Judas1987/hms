@@ -1,0 +1,16 @@
+.doctor-home-card {
+  margin: 20px;
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  mat-list-item {
+    margin-bottom: 5px;
+
+    .secondary {
+      font-size: 0.85rem;
+      color: gray;
+    }
+  }
+}

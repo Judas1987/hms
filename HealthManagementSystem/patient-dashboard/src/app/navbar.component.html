@@ -1,0 +1,28 @@
+<nav class="navbar" role="navigation" aria-label="Main Navigation">
+  <mat-toolbar color="primary">
+    <!-- Toggle menu (mobile) -->
+    <button mat-icon-button (click)="toggleMenu()" class="menu-button">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <span class="title">Health Management System</span>
+    <span class="spacer"></span>
+
+    <!-- Toggle dark mode -->
+    <button mat-icon-button (click)="toggleDarkMode()">
+      <mat-icon>{{ isDarkMode ? "dark_mode" : "light_mode" }}</mat-icon>
+    </button>
+
+    <!-- Menu links -->
+    <nav [ngClass]="{ open: isMenuOpen }" class="menu-items">
+      <a mat-button routerLink="/patients" *ngIf="isAdmin || isDoctor"
+        >Patients</a
+      >
+      <a mat-button routerLink="/doctor" *ngIf="isDoctor">Doctor Dashboard</a>
+      <a mat-button routerLink="/patient" *ngIf="isPatient">My Prescriptions</a>
+      <button mat-button *ngIf="auth.isLoggedIn()" (click)="logout()">
+        Logout
+      </button>
+    </nav>
+  </mat-toolbar>
+</nav>

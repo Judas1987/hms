@@ -1,0 +1,66 @@
+# -------------------------
+# Node / Angular
+# -------------------------
+node_modules/
+dist/
+.angular/
+.cache/
+.tmp/
+coverage/
+*.tgz
+.env
+.env.*.local
+
+# -------------------------
+# Angular Testing
+# -------------------------
+karma.conf.js
+test.ts
+
+# -------------------------
+# macOS / Linux / Windows
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# Visual Studio / .NET
+# -------------------------
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.dbmdl
+*.psess
+*.vsp
+*.vspx
+*.vspscc
+*.vssscc
+*.ncb
+*.cache
+*.log
+*.pdb
+*.tlog
+*.csproj.user
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+
+# -------------------------
+# ASP.NET Secrets & Configs
+# -------------------------
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.json
+
+# -------------------------
+# Logs
+# -------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
